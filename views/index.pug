@@ -1,0 +1,84 @@
+extends layout
+
+block content
+  .attackopers.hidden(style="display:none")
+    .buttonempty(onclick="setattackoper(-1)") Пусто
+    .buttonback(onclick="closeattack()")
+      < Назад
+    .row.full
+      each oper in opers
+        if oper.side === "ШТУРМОТРЯД"
+          .col
+            .opercard(id=oper.id onclick="setattackoper(" + oper.id + ")").cursor-p
+              img.operimg(src=oper.imgurl)
+              img.opericon(src=oper.iconurl width=60 height=60)
+              .nameoper.text-center.text-white #{oper.name}
+  .defenceopers.hidden(style="display:none")
+    .buttonempty(onclick="setdefenceoper(-1)") Пусто
+    .buttonback(onclick="closedefence()")
+      < Назад
+    .row.full
+      each oper in opers
+        if oper.side === "ЗАЩИТНИКИ"
+          .col
+            .opercard(id=oper.id onclick="setdefenceoper(" + oper.id + ")").cursor-p
+              img.operimg(src=oper.imgurl)
+              img.opericon(src=oper.iconurl width=60 height=60)
+              .nameoper.text-center.text-white #{oper.name}
+  .container-fluid
+    .reset(onclick="resetplayerdata()")
+      i.fas.fa-redo-alt
+    .side
+      h2.text-center.text-white.attackheader AТАКА
+      .row
+        each player,indexplayer in players
+          -var idinput = "player" + indexplayer
+          .col
+            input(class=idinput,value=player.name, type="text", onkeyup="SetName(" + indexplayer +")")
+            each playerdata,indexslot in player.attackopers
+              - var idcard = "playerid" + indexplayer + "slotid" + indexslot + 'attack'
+              - var dataoper = opers.find(x => x.id == playerdata.id);
+              .playeropercard.cursor-p(id=idcard, onclick="openattack(" + indexplayer + "," + indexslot + ")")
+                if playerdata.id === -1
+                  .empty #{inder}
+                else
+                  .opertemplate
+                    .row.m-0
+                        .col.p-0.imgoper
+                            img.imgslot(src=dataoper.imgurl)
+                        .col.p-0.position-relative.icon
+                            img.iconslot(src=dataoper.iconurl ,width=100, height=100)
+                            h3.name.text-center.text-white #{dataoper.name}
+                
+    .side.defence
+      h2.text-center.text-white.defenceheader ЗАЩИТА
+      .row
+        each player,indexplayer in players
+          -var idinput = "player" + indexplayer
+          .col
+            input(class=idinput,value=player.name, type="text", readonly)
+            each playerdata,indexslot in player.defenceopers
+              - var idcard = "playerid" + indexplayer + "slotid" + indexslot + 'defence'
+              - var dataoper = opers.find(x => x.id == playerdata.id);
+              .playeropercard.cursor-p(id=idcard, onclick="opendefence(" + indexplayer + "," + indexslot + ")")
+                if playerdata.id === -1
+                  .empty #{inder}
+                else
+                  .opertemplate
+                    .row.m-0
+                        .col.p-0.imgoper
+                            img.imgslot(src=dataoper.imgurl)
+                        .col.p-0.position-relative.icon
+                            img.iconslot(src=dataoper.iconurl, width=100, height=100)
+                            h3.name.text-center.text-white #{dataoper.name}
+ 
+
+
+          
+          
+        
+        
+
+            
+        
+ 
